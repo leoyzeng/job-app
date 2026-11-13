@@ -5,6 +5,6 @@ claude-agent-sdk>=0.2.172,<0.3
 playwright>=1.63
 pypdf>=6.17
 python-docx>=1.2
-python-multipart>=0.0.32
+python-multipart>=0.0.33
 # Stores your API key in Windows Credential Manager, the macOS Keychain or the Linux Secret Service.
 keyring>=25
