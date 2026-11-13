@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      dashboard:
+        patterns: [starlette, uvicorn, pydantic]
+    # claude-agent-sdk brings the Claude runtime with it. Raise it on purpose, after testing.
+    ignore:
+      - dependency-name: claude-agent-sdk
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

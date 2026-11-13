@@ -1,0 +1,71 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install packages
+        run: python -m pip install -r requirements-dev.txt
+      - name: Install the test browser (Linux)
+        if: runner.os == 'Linux'
+        run: python -m playwright install --with-deps chromium
+      - name: Install the test browser
+        if: runner.os != 'Linux'
+        run: python -m playwright install chromium
+      - name: Quick check
+        continue-on-error: true
+        run: python -m app check --quick
+        env:
+          JOBAPP_HOME: ${{ runner.temp }}/jobapp-home
+      - name: Tests
+        run: python -m pytest -q
+        env:
+          JOBAPP_HOME: ${{ runner.temp }}/jobapp-home
+
+  scripts:
+    name: launcher scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell script syntax
+        run: |
+          bash -n jobapp.sh
+          for f in scripts/Mac/*.command; do bash -n "$f"; done
+      - name: Line endings and permissions
+        run: |
+          for f in jobapp.sh scripts/Mac/*.command; do
+            if grep -q $'\r' "$f"; then echo "$f must use LF line endings"; exit 1; fi
+            if [ ! -x "$f" ]; then echo "$f must be executable: git add --chmod=+x '$f'"; exit 1; fi
+          done
+
+  secrets:
+    name: secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

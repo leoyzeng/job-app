@@ -1,0 +1,4 @@
+# The dashboard. Versions are the ones this build was tested with, or newer.
+starlette>=1.7
+uvicorn>=0.54
+pydantic>=2.13

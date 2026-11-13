@@ -1,0 +1,29 @@
+name: A form Job App can't read or fill
+description: An application form whose fields Job App misses or fills wrongly.
+labels: [forms]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Only the public link of the job posting, please. Never a filled-in form,
+        a screenshot with your details, or anything from behind a sign-in.
+  - type: input
+    id: link
+    attributes:
+      label: Link to the public job posting
+      placeholder: https://boards.greenhouse.io/company/jobs/123
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What went wrong
+      description: Which fields were missed or filled wrongly (by their label on the form).
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Settings → Copy diagnostics.
+      render: text

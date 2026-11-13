@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Autonomy Intern @ Practice Robotics (Ashby-style practice form)</title>
+<link rel="stylesheet" href="practice.css">
+</head>
+<body>
+<p class="practice-banner">Practice application for Job App. Nothing typed here leaves this computer.</p>
+<main>
+  <h1>Autonomy Intern</h1>
+  <p class="company">Practice Robotics, Remote (US)</p>
+  <form id="application-form" novalidate>
+    <div class="field"><label class="_heading" for="_systemfield_name">Name<span class="asterisk">*</span></label>
+      <input id="_systemfield_name" name="_systemfield_name" type="text" required placeholder="Type here..."></div>
+    <div class="field"><label class="_heading" for="_systemfield_email">Email<span class="asterisk">*</span></label>
+      <input id="_systemfield_email" name="_systemfield_email" type="email" required placeholder="hello@example.com..."></div>
+    <div class="field"><label class="_heading" for="3f2c9a10-55b1-4f7e-9d0a-2b1c3d4e5f60">Phone Number</label>
+      <input id="3f2c9a10-55b1-4f7e-9d0a-2b1c3d4e5f60" name="3f2c9a10-55b1-4f7e-9d0a-2b1c3d4e5f60" type="tel"></div>
+    <div class="field">
+      <label class="_heading" for="_systemfield_resume">Resume<span class="asterisk">*</span></label>
+      <button type="button" class="upload-button" onclick="document.getElementById('_systemfield_resume').click()">Upload File</button>
+      <input id="_systemfield_resume" name="_systemfield_resume" type="file" class="hidden" required>
+      <p class="file-name" id="resume-name"></p>
+    </div>
+    <div class="field"><label class="_heading" for="9a8b7c6d-0000-4000-8000-000000000001">LinkedIn Profile</label>
+      <input id="9a8b7c6d-0000-4000-8000-000000000001" type="text"></div>
+    <jobapp-field id="portfolio" data-label="Portfolio or personal website"></jobapp-field>
+    <div id="location-slot"></div>
+    <div id="toggle-slot"></div>
+    <fieldset class="field">
+      <legend class="_heading">Which of these have you used?</legend>
+      <ul class="plain choices">
+        <li><input type="checkbox" id="used-ros" name="used-ros"><label for="used-ros" style="display:inline">ROS or ROS 2</label></li>
+        <li><input type="checkbox" id="used-pytorch" name="used-pytorch"><label for="used-pytorch" style="display:inline">PyTorch</label></li>
+        <li><input type="checkbox" id="used-cpp" name="used-cpp"><label for="used-cpp" style="display:inline">C++</label></li>
+        <li><input type="checkbox" id="used-rust" name="used-rust"><label for="used-rust" style="display:inline">Rust</label></li>
+      </ul>
+    </fieldset>
+    <div class="field"><label class="_heading" for="start-date">When can you start?</label>
+      <input id="start-date" type="date"></div>
+    <div class="field"><label class="_heading" for="anything-else">Is there anything else you would like us to know?</label>
+      <textarea id="anything-else"></textarea></div>
+    <button type="submit" class="submit">Submit Application</button>
+  </form>
+</main>
+<script src="practice.js"></script>
+<script>
+(() => {
+  const P = window.Practice;
+  // A field inside a web component's shadow root, as some career sites build them.
+  customElements.define("jobapp-field", class extends HTMLElement {
+    connectedCallback() {
+      const root = this.attachShadow({ mode: "open" });
+      root.innerHTML = `<div class="field"><label for="inner" style="display:block;font-weight:600">${this.dataset.label}</label>
+        <input id="inner" type="url" style="width:100%;padding:7px 9px;box-sizing:border-box"></div>`;
+    }
+  });
+  for (const id of ["_systemfield_name", "_systemfield_email", "3f2c9a10-55b1-4f7e-9d0a-2b1c3d4e5f60",
+                    "9a8b7c6d-0000-4000-8000-000000000001", "anything-else"]) {
+    P.controlled(document.getElementById(id), id);
+  }
+  document.getElementById("location-slot").replaceWith(P.combobox({
+    id: "location-combobox", label: "Where are you located?", options: P.places, minChars: 2, placeholder: "Start typing..." }));
+  document.getElementById("toggle-slot").replaceWith(
+    P.toggles({ id: "enrolled", label: "Are you currently enrolled in a degree program?", options: ["Yes", "No"], required: true }),
+    P.toggles({ id: "sponsorship", label: "Will you require visa sponsorship to work in the US?", options: ["Yes", "No"], required: true }),
+  );
+  const resume = document.getElementById("_systemfield_resume");
+  resume.addEventListener("change", () => {
+    document.getElementById("resume-name").textContent = resume.files.length ? resume.files[0].name : "";
+  });
+  P.redraw();
+  P.practiceSubmit(document.querySelector("button.submit"));
+})();
+</script>
+</body>
+</html>

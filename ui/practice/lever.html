@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice Robotics - Perception Intern (Lever-style practice form)</title>
+<link rel="stylesheet" href="practice.css">
+</head>
+<body>
+<p class="practice-banner">Practice application for Job App. Nothing typed here leaves this computer.</p>
+<main>
+  <h1>Perception Intern</h1>
+  <p class="company">Practice Robotics, Boston, MA, Internship</p>
+  <form id="application-form" method="POST" enctype="multipart/form-data" novalidate>
+    <div class="section application-form">
+      <h4>Submit your application</h4>
+      <ul class="plain">
+        <li class="application-question resume">
+          <label>
+            <div class="application-label">Resume/CV<span class="required">&#10033;</span></div>
+            <div class="application-field">
+              <a class="visible-resume-upload">ATTACH RESUME/CV</a>
+              <input type="file" id="resume-upload-input" name="resume" class="invisible-resume-upload">
+              <span class="file-name resume-upload-name"></span>
+            </div>
+          </label>
+        </li>
+        <li class="application-question"><label><div class="application-label">Full name<span class="required">&#10033;</span></div>
+          <div class="application-field"><input type="text" name="name" required></div></label></li>
+        <li class="application-question"><label><div class="application-label">Email<span class="required">&#10033;</span></div>
+          <div class="application-field"><input type="email" name="email" required></div></label></li>
+        <li class="application-question"><label><div class="application-label">Phone</div>
+          <div class="application-field"><input type="text" name="phone"></div></label></li>
+        <li class="application-question"><label><div class="application-label">Current location</div>
+          <div class="application-field"><input type="text" name="location" autocomplete="off"></div></label></li>
+        <li class="application-question"><label><div class="application-label">Current company</div>
+          <div class="application-field"><input type="text" name="org"></div></label></li>
+      </ul>
+    </div>
+    <div class="section">
+      <h4>Links</h4>
+      <ul class="plain">
+        <li class="application-question"><label><div class="application-label">LinkedIn URL</div>
+          <div class="application-field"><input type="text" name="urls[LinkedIn]"></div></label></li>
+        <li class="application-question"><label><div class="application-label">GitHub URL</div>
+          <div class="application-field"><input type="text" name="urls[GitHub]"></div></label></li>
+        <li class="application-question"><label><div class="application-label">Portfolio URL</div>
+          <div class="application-field"><input type="text" name="urls[Portfolio]"></div></label></li>
+        <li class="application-question"><label><div class="application-label">Other website</div>
+          <div class="application-field"><input type="text" name="urls[Other]"></div></label></li>
+      </ul>
+    </div>
+    <div class="section custom-questions">
+      <h4>Questions</h4>
+      <ul class="plain">
+        <li class="application-question custom-question">
+          <div class="application-label full-width">Are you at least 18 years of age?<span class="required">&#10033;</span></div>
+          <div class="application-field full-width">
+            <ul class="choices" data-qa="multiple-choice">
+              <li><label><input type="radio" name="cards[7d1e][field0]" value="Yes" required><span class="application-answer-alternative">Yes</span></label></li>
+              <li><label><input type="radio" name="cards[7d1e][field0]" value="No"><span class="application-answer-alternative">No</span></label></li>
+            </ul>
+          </div>
+        </li>
+        <li class="application-question custom-question">
+          <div class="application-label full-width">Which teams interest you?</div>
+          <div class="application-field full-width">
+            <ul class="choices" data-qa="checkboxes">
+              <li><label><input type="checkbox" name="cards[7d1e][field1]" value="Autonomy"><span class="application-answer-alternative">Autonomy</span></label></li>
+              <li><label><input type="checkbox" name="cards[7d1e][field1]" value="Perception"><span class="application-answer-alternative">Perception</span></label></li>
+              <li><label><input type="checkbox" name="cards[7d1e][field1]" value="Controls"><span class="application-answer-alternative">Controls</span></label></li>
+              <li><label><input type="checkbox" name="cards[7d1e][field1]" value="Embedded"><span class="application-answer-alternative">Embedded</span></label></li>
+            </ul>
+          </div>
+        </li>
+        <li class="application-question custom-question">
+          <label><div class="application-label full-width">Expected graduation year<span class="required">&#10033;</span></div>
+            <div class="application-field full-width">
+              <select name="cards[7d1e][field2]" required>
+                <option value="">Select ...</option><option value="2026">2026</option><option value="2027">2027</option>
+                <option value="2028">2028</option><option value="2029">2029</option>
+              </select>
+            </div></label>
+        </li>
+        <li class="application-question custom-question">
+          <label><div class="application-label full-width">Earliest start date</div>
+            <div class="application-field full-width"><input type="date" name="cards[7d1e][field3]"></div></label>
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h4>Additional information</h4>
+      <textarea name="comments" id="additional-information" placeholder="Add a cover letter or anything else you want to share."></textarea>
+    </div>
+    <div class="section eeo">
+      <h4>U.S. Equal Employment Opportunity information</h4>
+      <p>Completion is voluntary and will not subject you to adverse treatment.</p>
+      <label>Gender<select name="eeo[gender]"><option value="">Select ...</option><option>Male</option><option>Female</option>
+        <option>Decline to self-identify</option></select></label>
+      <label>Race<select name="eeo[race]"><option value="">Select ...</option><option>Asian (Not Hispanic or Latino)</option>
+        <option>White (Not Hispanic or Latino)</option><option>Black or African American (Not Hispanic or Latino)</option>
+        <option>Hispanic or Latino</option><option>Two or More Races (Not Hispanic or Latino)</option>
+        <option>Decline to self-identify</option></select></label>
+      <label>Veteran status<select name="eeo[veteran]"><option value="">Select ...</option><option>I am a veteran</option>
+        <option>I am not a veteran</option><option>Decline to self-identify</option></select></label>
+    </div>
+    <div class="section">
+      <label class="consent" style="font-weight:400"><input type="checkbox" name="consent[store]" value="1">
+        I agree to the processing of my personal data as described in the privacy notice.</label>
+    </div>
+    <button type="submit" class="template-btn-submit postings-btn" id="btn-submit">Submit application</button>
+  </form>
+</main>
+<script src="practice.js"></script>
+<script>
+(() => {
+  const input = document.getElementById("resume-upload-input");
+  input.addEventListener("change", () => {
+    document.querySelector(".resume-upload-name").textContent = input.files.length ? input.files[0].name : "";
+  });
+  window.Practice.practiceSubmit(document.getElementById("btn-submit"));
+})();
+</script>
+</body>
+</html>

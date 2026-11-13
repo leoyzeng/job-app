@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Robotics Software Intern | Practice Robotics (Greenhouse-style practice form)</title>
+<link rel="stylesheet" href="practice.css">
+</head>
+<body>
+<p class="practice-banner">Practice application for Job App. Nothing typed here leaves this computer.</p>
+<main>
+  <h1>Robotics Software Intern</h1>
+  <p class="company">Practice Robotics, Pittsburgh, PA</p>
+  <form id="application-form" novalidate>
+    <h2>Apply for this job</h2>
+    <div class="field"><label id="first_name-label" for="first_name">First Name<span class="asterisk" aria-hidden="true"> *</span></label>
+      <input id="first_name" name="first_name" type="text" aria-required="true" autocomplete="given-name"></div>
+    <div class="field"><label id="last_name-label" for="last_name">Last Name<span class="asterisk" aria-hidden="true"> *</span></label>
+      <input id="last_name" name="last_name" type="text" aria-required="true" autocomplete="family-name"></div>
+    <div class="field"><label for="preferred_name">Preferred First Name</label>
+      <input id="preferred_name" name="preferred_name" type="text"></div>
+    <div class="field"><label for="email">Email<span class="asterisk" aria-hidden="true"> *</span></label>
+      <input id="email" name="email" type="email" aria-required="true" autocomplete="email"></div>
+    <div id="country-slot"></div>
+    <div class="field"><label for="phone">Phone<span class="asterisk" aria-hidden="true"> *</span></label>
+      <input id="phone" name="phone" type="tel" aria-required="true" autocomplete="tel"></div>
+    <div id="location-slot"></div>
+
+    <div class="field file-upload">
+      <div class="label" id="resume-label">Resume/CV<span class="asterisk" aria-hidden="true"> *</span></div>
+      <div class="file-actions">
+        <button type="button" class="btn--pill" onclick="document.getElementById('resume').click()">Attach</button>
+        <button type="button" class="btn--pill">Enter manually</button>
+      </div>
+      <input id="resume" name="resume" type="file" class="visually-hidden" aria-labelledby="resume-label"
+             aria-required="true" accept=".pdf,.doc,.docx,.txt,.rtf">
+      <p class="file-name" id="resume-name"></p>
+    </div>
+    <div class="field file-upload">
+      <div class="label" id="cover_letter-label">Cover Letter</div>
+      <div class="file-actions">
+        <button type="button" class="btn--pill" onclick="document.getElementById('cover_letter').click()">Attach</button>
+        <button type="button" class="btn--pill">Enter manually</button>
+      </div>
+      <input id="cover_letter" name="cover_letter" type="file" class="visually-hidden" aria-labelledby="cover_letter-label"
+             accept=".pdf,.doc,.docx,.txt,.rtf">
+      <p class="file-name" id="cover_letter-name"></p>
+    </div>
+
+    <div class="field"><label for="question_31001">LinkedIn Profile</label>
+      <input id="question_31001" name="question_31001" type="text"></div>
+    <div class="field"><label for="question_31002">Website</label>
+      <input id="question_31002" name="question_31002" type="text"></div>
+    <div id="questions-slot"></div>
+    <div class="field"><label for="question_31006">Why are you interested in Practice Robotics?<span class="asterisk" aria-hidden="true"> *</span></label>
+      <textarea id="question_31006" name="question_31006" aria-required="true" maxlength="2000"></textarea></div>
+
+    <h3>Education</h3>
+    <div id="education-slot"></div>
+    <div class="field"><label for="end-month">End date month</label>
+      <select id="end-month" name="end_month">
+        <option value="">Month</option><option>January</option><option>February</option><option>March</option>
+        <option>April</option><option>May</option><option>June</option><option>July</option><option>August</option>
+        <option>September</option><option>October</option><option>November</option><option>December</option>
+      </select></div>
+    <div class="field"><label for="end-year">End date year</label>
+      <input id="end-year" name="end_year" type="text" inputmode="numeric" placeholder="YYYY"></div>
+
+    <h3>Voluntary Self-Identification</h3>
+    <p>Completion is voluntary and will not affect your application.</p>
+    <div id="eeoc-slot"></div>
+
+    <div class="field">
+      <input type="checkbox" id="privacy" name="privacy_ack" aria-required="true">
+      <label for="privacy" style="display:inline">I acknowledge that I have read the candidate privacy notice.<span class="asterisk"> *</span></label>
+    </div>
+    <button type="submit" class="btn btn--primary">Submit application</button>
+  </form>
+</main>
+<script src="practice.js"></script>
+<script>
+(() => {
+  const P = window.Practice;
+  for (const id of ["first_name", "last_name", "preferred_name", "email", "phone", "question_31001", "question_31002",
+                    "question_31006", "end-year"]) {
+    P.controlled(document.getElementById(id), id);
+  }
+  document.getElementById("country-slot").replaceWith(P.combobox({
+    id: "country", label: "Country", options: ["United States", "Canada", "United Kingdom", "India"] }));
+  document.getElementById("location-slot").replaceWith(P.combobox({
+    id: "candidate-location", label: "Location (City)", options: P.places, minChars: 2, placeholder: "Start typing..." }));
+  const qs = document.getElementById("questions-slot");
+  qs.replaceWith(
+    P.combobox({ id: "question_31003", label: "How did you hear about this job?",
+                 options: ["LinkedIn", "Company website", "University career fair", "Referral", "Other"] }),
+    P.combobox({ id: "question_31004", label: "Are you legally authorized to work in the United States?", required: true,
+                 options: ["Yes", "No"] }),
+    P.combobox({ id: "question_31005", label: "Will you now or in the future require sponsorship for employment visa status (e.g. H-1B)?",
+                 required: true, options: ["Yes", "No"] }),
+  );
+  document.getElementById("education-slot").replaceWith(
+    P.combobox({ id: "school--0", label: "School", required: true,
+                 options: ["Carnegie Mellon University", "University of Pittsburgh", "University of Waterloo",
+                           "Three Rivers University", "Lakeshore Institute of Technology", "Other"] }),
+    P.combobox({ id: "degree--0", label: "Degree",
+                 options: ["Bachelor's Degree", "Master's Degree", "Doctor of Philosophy (Ph.D.)", "Associate's Degree", "Other"] }),
+    P.combobox({ id: "discipline--0", label: "Discipline",
+                 options: ["Computer Engineering", "Computer Science", "Electrical Engineering", "Mechanical Engineering",
+                           "Robotics", "Other"] }),
+  );
+  document.getElementById("eeoc-slot").replaceWith(
+    P.combobox({ id: "gender", label: "Gender", options: ["Male", "Female", "Decline To Self Identify"] }),
+    P.combobox({ id: "hispanic_ethnicity", label: "Are you Hispanic/Latino?", options: ["Yes", "No", "Decline To Self Identify"] }),
+    P.combobox({ id: "veteran_status", label: "Veteran Status",
+                 options: ["I am not a protected veteran", "I identify as one or more of the classifications of protected veteran",
+                           "I don't wish to answer"] }),
+    P.combobox({ id: "disability_status", label: "Disability Status",
+                 options: ["Yes, I have a disability (or previously had a disability)", "No, I do not have a disability and have not had one in the past",
+                           "I do not want to answer"] }),
+  );
+  for (const id of ["resume", "cover_letter"]) {
+    const input = document.getElementById(id);
+    input.addEventListener("change", () => {
+      document.getElementById(`${id}-name`).textContent = input.files.length ? input.files[0].name : "";
+    });
+  }
+  P.redraw();
+  P.practiceSubmit(document.querySelector("button[type=submit]"));
+})();
+</script>
+</body>
+</html>

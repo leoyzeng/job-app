@@ -1,0 +1,36 @@
+name: Bug report
+description: Something in Job App does not work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not paste your resume, answers, application contents or any key here.
+        Settings → **Copy diagnostics** gives you text that leaves all of that out.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Paste the text from Settings → Copy diagnostics.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: system
+    attributes:
+      label: System
+      options: [Windows, macOS (Apple Silicon), macOS (Intel), Linux]
+    validations:
+      required: true
+  - type: dropdown
+    id: signin
+    attributes:
+      label: How the agents sign in
+      options: [My Claude account, My API key, Not signed in yet]

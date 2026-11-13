@@ -1,0 +1,45 @@
+/* Plain looks for the practice forms. Each form copies the structure of an applicant system, not its design. */
+body { font: 15px/1.5 "Segoe UI", system-ui, sans-serif; margin: 0; color: #1d2733; background: #f6f7f9; }
+.practice-banner { margin: 0; padding: 8px 16px; background: #fff4c2; border-bottom: 1px solid #e6d27a; font-weight: 600; }
+main { max-width: 720px; margin: 24px auto 64px; background: #fff; padding: 24px 32px 32px; border: 1px solid #dde2e8; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+h2 { font-size: 19px; margin: 28px 0 8px; }
+h3, h4 { font-size: 16px; margin: 24px 0 6px; }
+.company { color: #5b6672; margin: 0 0 16px; }
+.field { margin: 14px 0; }
+label, .question, .application-label { display: block; font-weight: 600; margin-bottom: 4px; }
+input[type=text], input[type=email], input[type=tel], input[type=url], input[type=date], input:not([type]), textarea, select {
+  width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1px solid #aab4bf; border-radius: 4px; font: inherit; }
+textarea { min-height: 90px; }
+.asterisk, .required { color: #b3261e; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hidden, .invisible-resume-upload { display: none; }
+button { font: inherit; cursor: pointer; }
+.btn, .toggle, .wd-dropdown, .btn--pill, .visible-resume-upload, .upload-button {
+  padding: 6px 14px; border: 1px solid #8b96a3; border-radius: 4px; background: #fff; display: inline-block; }
+.btn--primary, .template-btn-submit, .submit { background: #1f4fc4; color: #fff; border: 0; padding: 9px 18px; border-radius: 4px; margin-top: 20px; }
+.select__container { position: relative; }
+.select__control { display: flex; align-items: center; border: 1px solid #aab4bf; border-radius: 4px; min-height: 36px; padding: 0 8px; cursor: text; }
+.select__value-container { flex: 1; position: relative; display: flex; align-items: center; }
+.select__placeholder { color: #7a8591; position: absolute; pointer-events: none; }
+.select__single-value { position: absolute; pointer-events: none; }
+.select__input { border: 0 !important; outline: 0; padding: 6px 0 !important; width: 100% !important; background: transparent; }
+.select__menu { position: absolute; z-index: 5; left: 0; right: 0; background: #fff; border: 1px solid #aab4bf; border-radius: 4px; margin-top: 2px; }
+.select__option, .select__menu-notice { padding: 7px 10px; }
+.select__option--is-focused, .select__option:hover { background: #e8eefc; }
+.toggles { display: flex; gap: 8px; }
+.toggle[aria-pressed="true"] { background: #1f4fc4; color: #fff; border-color: #1f4fc4; }
+.wd-list { list-style: none; margin: 4px 0 0; padding: 4px 0; border: 1px solid #aab4bf; border-radius: 4px; max-width: 360px; background: #fff; }
+.wd-list li { padding: 6px 12px; cursor: pointer; }
+.wd-list li:hover { background: #e8eefc; }
+.choices { list-style: none; padding: 0; margin: 0; }
+.choices li { margin: 3px 0; }
+.choices label { font-weight: 400; display: inline; }
+.file-name { margin: 6px 0 0; color: #1b6e45; }
+.sent { color: #1b6e45; font-weight: 600; }
+.error { color: #b3261e; font-size: 13px; margin-top: 4px; }
+.progress { display: flex; gap: 16px; list-style: none; padding: 0; color: #5b6672; }
+.progress [aria-current="step"] { color: #1d2733; font-weight: 700; }
+.date-segments { display: flex; gap: 6px; align-items: center; }
+.date-segments input { width: 70px; }
+ul.plain { list-style: none; padding: 0; margin: 0; }

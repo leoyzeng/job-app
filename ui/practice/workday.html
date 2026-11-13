@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apply - Controls Software Intern (Workday-style practice form)</title>
+<link rel="stylesheet" href="practice.css">
+</head>
+<body>
+<p class="practice-banner">Practice application for Job App. Nothing typed here leaves this computer.</p>
+<main data-automation-id="applyFlowPage">
+  <h1>Controls Software Intern</h1>
+  <ol class="progress" data-automation-id="progressBar" aria-label="Progress">
+    <li data-step="1">My Information</li><li data-step="2">Application Questions</li><li data-step="3">Review</li>
+  </ol>
+  <p data-automation-id="progressBarActiveStep" id="step-text"></p>
+  <div id="step"></div>
+  <div class="nav" data-automation-id="pageFooter">
+    <button type="button" data-automation-id="bottom-navigation-previous-button" id="back">Back</button>
+    <button type="button" class="btn--primary" data-automation-id="bottom-navigation-next-button" id="next">Save and Continue</button>
+  </div>
+</main>
+<script src="practice.js"></script>
+<script>
+(() => {
+  const P = window.Practice;
+  const { el } = P;
+  let step = 1;
+  const errors = {};
+
+  function text(id, label, opts = {}) {
+    const input = el(opts.multiline ? "textarea" : "input", {
+      id, "data-automation-id": id, type: opts.multiline ? null : (opts.type || "text"),
+      "aria-required": opts.required ? "true" : null,
+      "aria-invalid": errors[id] ? "true" : null, "aria-describedby": errors[id] ? `${id}-error` : null,
+    });
+    input.value = P.state[id] || "";
+    input.addEventListener("input", () => { P.state[id] = input.value; });
+    return el("div", { class: "field", "data-automation-id": `formField-${id}` },
+      el("label", { for: id }, label, opts.required ? el("abbr", { title: "required", text: "*" }) : null),
+      input,
+      errors[id] ? el("div", { class: "error", id: `${id}-error`, role: "alert", "data-automation-id": "errorMessage" }, errors[id]) : null);
+  }
+
+  function radio(name, label, options, required) {
+    return el("fieldset", { class: "field", "data-automation-id": `formField-${name}` },
+      el("legend", null, label, required ? el("abbr", { title: "required", text: "*" }) : null),
+      options.map((o, i) => {
+        const input = el("input", { type: "radio", name, id: `${name}-${i}`, value: o });
+        input.checked = P.state[name] === o;
+        input.addEventListener("change", () => { P.state[name] = o; });
+        return el("div", null, input, el("label", { for: `${name}-${i}`, style: "display:inline;font-weight:400" }, o));
+      }));
+  }
+
+  function dropdownField(id, label, options, required) {
+    const field = P.dropdown({ id, label, options, required });
+    if (errors[id]) field.append(el("div", { class: "error", role: "alert", "data-automation-id": "errorMessage" }, errors[id]));
+    return field;
+  }
+
+  const STEPS = {
+    1: () => [
+      el("h2", null, "My Information"),
+      dropdownField("source", "How Did You Hear About Us?", ["Job Board", "Career Fair", "Company Website", "Referral"], true),
+      radio("candidateIsPreviousWorker", "Have you previously been employed by Practice Robotics?", ["Yes", "No"], true),
+      el("h3", null, "Legal Name"),
+      text("legalNameSection_firstName", "First Name", { required: true }),
+      text("legalNameSection_lastName", "Last Name", { required: true }),
+      el("h3", null, "Address"),
+      text("addressSection_city", "City"),
+      dropdownField("addressSection_countryRegion", "State", ["Pennsylvania", "Massachusetts", "California", "Washington"]),
+      text("addressSection_postalCode", "Postal Code"),
+      el("h3", null, "Email Address"),
+      text("email", "Email Address", { type: "email", required: true }),
+      el("h3", null, "Phone"),
+      dropdownField("phone-device-type", "Phone Device Type", ["Mobile", "Home", "Work"], true),
+      text("phone-number", "Phone Number", { type: "tel", required: true }),
+    ],
+    2: () => [
+      el("h2", null, "Application Questions"),
+      dropdownField("workAuthorization", "Are you legally authorized to work in the country in which this job is located?", ["Yes", "No"], true),
+      dropdownField("sponsorship", "Will you now or in the future require sponsorship for employment visa status?", ["Yes", "No"], true),
+      el("div", { class: "field", role: "group", "aria-labelledby": "grad-label", "data-automation-id": "formField-graduation" },
+        el("label", { id: "grad-label" }, "Expected Graduation Date"),
+        el("div", { class: "date-segments", "data-automation-id": "dateInputWrapper" },
+          segment("dateSectionMonth-input", "Month", "MM"), "/", segment("dateSectionYear-input", "Year", "YYYY"))),
+      text("project", "Tell us about a project you are proud of.", { multiline: true }),
+    ],
+    3: () => [
+      el("h2", null, "Review"),
+      el("p", null, "Check your answers before you submit."),
+      el("dl", null, Object.entries(P.state).filter(([, v]) => v).flatMap(([k, v]) => [el("dt", null, k), el("dd", null, String(v))])),
+    ],
+  };
+
+  function segment(id, label, placeholder) {
+    const input = el("input", { id, "data-automation-id": id, role: "spinbutton", "aria-label": label, placeholder, inputmode: "numeric" });
+    input.value = P.state[id] || "";
+    input.addEventListener("input", () => { P.state[id] = input.value; });
+    return input;
+  }
+
+  const REQUIRED = {
+    1: ["source", "candidateIsPreviousWorker", "legalNameSection_firstName", "legalNameSection_lastName", "email",
+        "phone-device-type", "phone-number"],
+    2: ["workAuthorization", "sponsorship"],
+  };
+
+  function draw() {
+    document.getElementById("step").replaceChildren(...STEPS[step]());
+    document.getElementById("step-text").textContent = `current step ${step} of 3`;
+    document.querySelectorAll(".progress li").forEach((li) => {
+      if (Number(li.dataset.step) === step) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+    });
+    document.getElementById("back").disabled = step === 1;
+    document.getElementById("next").textContent = step === 3 ? "Submit" : "Save and Continue";
+    P.redraw();
+  }
+
+  document.getElementById("next").addEventListener("click", () => {
+    if (step === 3) {
+      let note = document.getElementById("practice-sent");
+      if (!note) {
+        note = el("p", { id: "practice-sent", class: "sent", role: "status" });
+        document.querySelector(".nav").after(note);
+      }
+      note.textContent = "Thank you for applying! (This is a practice form: nothing was sent anywhere.)";
+      return;
+    }
+    for (const key of Object.keys(errors)) delete errors[key];
+    for (const key of REQUIRED[step]) if (!P.state[key]) errors[key] = "The field is required and must have a value.";
+    if (!Object.keys(errors).length) step += 1;
+    draw();
+  });
+  document.getElementById("back").addEventListener("click", () => { if (step > 1) { step -= 1; draw(); } });
+  draw();
+})();
+</script>
+</body>
+</html>

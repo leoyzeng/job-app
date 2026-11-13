@@ -1,0 +1,10 @@
+# The dedicated browser, the agents, resume reading, and keeping your API key safe.
+# claude-agent-sdk is a large download: it carries the Claude runtime inside it.
+# It is kept below 0.3 so a new runtime arrives only when someone raises this line on purpose.
+claude-agent-sdk>=0.2.172,<0.3
+playwright>=1.63
+pypdf>=6.17
+python-docx>=1.2
+python-multipart>=0.0.32
+# Stores your API key in Windows Credential Manager, the macOS Keychain or the Linux Secret Service.
+keyring>=25

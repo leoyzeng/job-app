@@ -1,0 +1,23 @@
+# The program's own environment and caches.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+
+# Personal data never belongs in the repository. Job App keeps it in a per-user
+# folder outside the clone (see README), but older copies kept it here.
+/data/
+/data_demo/
+/profile/
+/config/
+.env
+*.log
+
+# Editors and systems.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

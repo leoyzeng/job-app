@@ -1,0 +1,11 @@
+name: Feature request
+description: An idea for Job App.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like Job App to do?
+      description: The problem you have, and what would help.
+    validations:
+      required: true

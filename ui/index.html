@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job App</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2317202B'/%3E%3Cpath d='M6 20 L26 14 L26 21 L6 26 Z' fill='%23FFE347'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<a class="jump" href="#list">Go to the job list</a>
+
+<div id="notices" class="notices" role="status"></div>
+
+<header class="top">
+  <h1 class="brand">Job App</h1>
+  <nav class="views" id="views" aria-label="Screens"></nav>
+  <div class="top-actions">
+    <span class="usage" id="usage" role="status"></span>
+    <button type="button" class="btn" id="btn-search" data-for-view="jobs search">Search for new jobs</button>
+    <button type="button" class="btn" id="btn-add" data-for-view="jobs">Add a job by link</button>
+    <button type="button" class="btn btn-plain" id="btn-settings">Settings</button>
+  </div>
+</header>
+
+<div id="search-strip" class="strip" role="status" hidden></div>
+
+<div id="view-jobs">
+  <nav class="tabs" id="tabs" aria-label="Job lists"></nav>
+  <main id="list" class="sheet" tabindex="-1" aria-live="off"></main>
+</div>
+
+<div id="view-profile" hidden>
+  <main id="profile" class="sheet profile" tabindex="-1"></main>
+</div>
+
+<div id="view-search" hidden>
+  <main id="search" class="sheet profile" tabindex="-1"></main>
+</div>
+
+<div id="view-answers" hidden>
+  <main id="answers" class="sheet profile" tabindex="-1"></main>
+</div>
+
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+<dialog id="dlg-add" aria-labelledby="dlg-add-title">
+  <form id="form-add" method="dialog" novalidate>
+    <h2 id="dlg-add-title">Add a job by link</h2>
+    <p class="dialog-note">Paste the posting's link. Job App reads the company, title and description from the page and checks the job against your requirements. Fill in a detail only to correct it, or when the page cannot be read.</p>
+    <p class="form-error" id="add-error" role="alert" hidden></p>
+
+    <label class="field">
+      <span class="field-label">Link to the posting</span>
+      <input type="url" name="url" inputmode="url" autocomplete="off" placeholder="https://" required>
+      <span class="field-error" data-for="url"></span>
+    </label>
+    <p class="field-action"><button type="button" class="linklike" id="btn-current-page">Use the page open in Job App's browser window</button></p>
+    <div class="field-row">
+      <label class="field">
+        <span class="field-label">Company <span class="optional">read from the page</span></span>
+        <input type="text" name="company" autocomplete="off">
+        <span class="field-error" data-for="company"></span>
+      </label>
+      <label class="field">
+        <span class="field-label">Job title <span class="optional">read from the page</span></span>
+        <input type="text" name="title" autocomplete="off">
+        <span class="field-error" data-for="title"></span>
+      </label>
+    </div>
+    <div class="field-row">
+      <label class="field">
+        <span class="field-label">Location <span class="optional">optional</span></span>
+        <input type="text" name="location" autocomplete="off">
+        <span class="field-error" data-for="location"></span>
+      </label>
+      <label class="field">
+        <span class="field-label">Pay <span class="optional">optional</span></span>
+        <input type="text" name="pay" autocomplete="off">
+        <span class="field-error" data-for="pay"></span>
+      </label>
+    </div>
+    <label class="field">
+      <span class="field-label">Description or notes <span class="optional">optional</span></span>
+      <textarea name="description" rows="4"></textarea>
+      <span class="field-error" data-for="description"></span>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-plain" data-close>Cancel</button>
+      <button type="submit" class="btn btn-main">Add job</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-settings" aria-labelledby="dlg-settings-title">
+  <div class="dialog-body">
+    <h2 id="dlg-settings-title">Settings</h2>
+
+    <fieldset class="choice" id="set-browser">
+      <legend class="setting-group">Open job postings in</legend>
+      <label class="choice-row">
+        <input type="radio" name="browser-mode" value="dedicated">
+        <span class="switch-text">
+          <span class="switch-title">Job App's browser window</span>
+          <span class="switch-help">A separate Chrome window that Job App controls, with its own sign-ins. Autofill runs here.</span>
+        </span>
+      </label>
+      <label class="choice-row">
+        <input type="radio" name="browser-mode" value="own_chrome">
+        <span class="switch-text">
+          <span class="switch-title">Your own Chrome</span>
+          <span class="switch-help" id="own-chrome-help">A new tab in the Chrome you use every day, with your bookmarks and sign-ins. Postings open there; autofill still runs in Job App's browser window.</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <h3 class="setting-group">Autofill</h3>
+    <p class="dialog-note" id="settings-note"></p>
+
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-pause" data-setting="pause_after_each_page">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Pause after each page</span>
+        <span class="switch-help">The agent stops at the end of every page of an application so you can look it over before it moves on.</span>
+      </span>
+    </label>
+
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-write" data-setting="write_long_answers">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Write cover letters and long answers</span>
+        <span class="switch-help">The agent drafts long written answers in your voice, using only facts from your resume. When this is off, those fields are left for you.</span>
+      </span>
+    </label>
+
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-never-next" data-setting="never_click_next">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Never click Next or Continue</span>
+        <span class="switch-help">Job App fills the page you are on and stops. It never clicks Next, Continue, Save and continue, Review, Apply, or any button that moves to another page: you move on yourself, then click Continue in Job App.</span>
+      </span>
+    </label>
+
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-meaning" data-setting="match_questions_by_meaning">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Recognise questions by meaning</span>
+        <span class="switch-help">An agent reads each question with its page, choices and the job's location, so a question worded differently from one you answered before still gets your answer. Answers reused this way are listed for you to check. When this is off, only the same wording is matched.</span>
+      </span>
+    </label>
+
+    <label class="field setting-field">
+      <span class="field-label">Applications filled at the same time</span>
+      <select id="set-parallel" data-setting-path="max_parallel_applications" data-kind="int">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+      </select>
+      <span class="switch-help">Each application gets its own tab in Job App's browser window. More at once uses your Claude usage faster.</span>
+    </label>
+
+    <h3 class="setting-group">Daily search</h3>
+    <label class="field setting-field">
+      <span class="field-label">Search for new jobs every day at <span class="optional">leave empty for never</span></span>
+      <input type="time" id="set-daily" data-setting-path="search.daily_at" data-kind="time">
+      <span class="switch-help" id="daily-note">Job App must be running. If you start it later in the day, the search runs then.</span>
+    </label>
+
+    <h3 class="setting-group">Usage limits</h3>
+    <p class="dialog-note" id="limits-note">These figures are the cost each agent run reports. With your own API key they are what you pay; with a Claude plan nothing is charged per run, and they keep Job App from using up your plan's limits.</p>
+    <div class="field-row">
+      <label class="field setting-field">
+        <span class="field-label">Daily cap, in dollars</span>
+        <input type="number" id="set-per-day" min="0" step="0.5" data-setting-path="budget_usd.per_day" data-kind="number">
+        <span class="switch-help">0 means no cap.</span>
+      </label>
+      <label class="field setting-field">
+        <span class="field-label">Per application</span>
+        <input type="number" id="set-per-app" min="0" step="0.25" data-setting-path="budget_usd.per_application" data-kind="number">
+      </label>
+    </div>
+    <label class="field setting-field narrow">
+      <span class="field-label">Per search</span>
+      <input type="number" id="set-per-search" min="0" step="0.25" data-setting-path="budget_usd.per_search" data-kind="number">
+    </label>
+
+    <h3 class="setting-group">Form engine</h3>
+    <p class="dialog-note">See how Job App reads and fills an application form, on a practice form that sends nothing anywhere.</p>
+    <div class="step-actions"><button type="button" class="btn" id="btn-practice">Try it on a practice form</button></div>
+
+    <h3 class="setting-group">Privacy and updates</h3>
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-transcripts" data-setting="keep_agent_transcripts">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Keep agent transcripts</span>
+        <span class="switch-help">The Claude runtime saves a transcript of every agent run in the .claude folder in your home folder. When this is off, Job App deletes the transcripts of its own runs when it starts and stops.</span>
+      </span>
+    </label>
+    <label class="switch-row">
+      <input type="checkbox" role="switch" id="set-updates" data-setting="check_for_updates">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="switch-text">
+        <span class="switch-title">Tell me about new versions</span>
+        <span class="switch-help">Once a day, Job App asks GitHub for the project's latest release. Nothing about you is sent.</span>
+      </span>
+    </label>
+
+    <h3 class="setting-group">Your data</h3>
+    <p class="dialog-note" id="data-note">Everything Job App keeps about you stays on this computer, in one folder.</p>
+    <div class="step-actions">
+      <button type="button" class="btn" id="btn-open-data">Open my data folder</button>
+      <button type="button" class="btn" id="btn-diagnostics">Copy diagnostics</button>
+    </div>
+    <p class="dialog-note" id="diagnostics-note" role="status"></p>
+
+    <p class="saved-note" id="settings-saved" role="status"></p>
+
+    <dl class="about" id="about"></dl>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-main" data-close>Done</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dlg-practice" aria-labelledby="dlg-practice-title">
+  <div class="dialog-body">
+    <h2 id="dlg-practice-title">Try the form engine</h2>
+    <p class="dialog-note">Opens a practice application form in Job App's browser window and fills what plain code can fill
+      from your confirmed profile. Change anything you like in that window, then check what you changed: that is how
+      Job App will learn your answers. Nothing is sent anywhere.</p>
+    <fieldset class="choice" id="practice-styles">
+      <legend class="setting-group">Practice form</legend>
+    </fieldset>
+    <div class="step-actions">
+      <button type="button" class="btn btn-main" id="btn-practice-open">Open and fill</button>
+      <button type="button" class="btn" id="btn-practice-check">Check what I changed</button>
+    </div>
+    <div id="practice-result" class="practice-result" role="status"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-plain" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="/static/profile.js"></script>
+<script src="/static/search.js"></script>
+<script src="/static/answers.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

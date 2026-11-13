@@ -1,0 +1,7 @@
+#!/bin/bash
+# Double-click in Finder to run: ./jobapp.sh signin
+cd "$(dirname "$0")/../.." || exit 1
+bash ./jobapp.sh signin
+echo
+read -n 1 -s -r -p "Press any key to close this window."
+echo
